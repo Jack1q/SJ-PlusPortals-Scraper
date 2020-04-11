@@ -1,2 +1,2 @@
 # SJ-PlusPortals-Scraper
-Uses webdriver to scrape grades / class info loaded into table by JS on PlusPortals for SJHS
+This is a proof-of-concept program to show how one might log into the SJHS portals page and scrape student data (grades, classes, etc.). I chose to use a webdriver over traditional webscraping in order to be able to parse grade/class data from a table that is loaded by JavaScript. I will probably implement this function in a future project I make. I hope someone finds this useful, either now or in coming years, as it was kind of a pain trying to do this without a driver.
