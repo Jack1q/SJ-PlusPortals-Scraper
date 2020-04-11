@@ -18,11 +18,12 @@ import time
 
 USERNAME = '' # Your school email
 PASSWORD = '' # Your password
+
 # These words appear in classes that should never have grades.
 BLACKLIST_KEYWORDS = ['Lab', 'Homeroom','Service','Study', 'JrCollPlan'] # need to determine others
 # note: 'Lab' accounts for AP Chem/Bio block lab period, which gets its own portals entry
 
-driver = webdriver.Firefox() # You could use a headless drivervv also
+driver = webdriver.Firefox() # You could use a headless driver also
 
 driver.get('https://www.plusportals.com/sjhs') # load page
 
@@ -37,7 +38,7 @@ password.send_keys(PASSWORD)
 # Clicks the 'Sign In' button
 driver.find_element_by_name('btnsumit').click()
 
-# must wait so javascipt can load grade data into table from portals servers
+# must wait 6 seconds so js script can load grade data into table from portals servers
 time.sleep(6)
 
 # access table that contains grades / classes by its xpath
@@ -63,11 +64,10 @@ def count_digits(str):
 course_list = [] # List of Course objects
 
 # extracts the course name and grade from each class. assigns 'none posted'
-# to classes without a grade. 
+# to classes with grades 
 for row in rows:
 	course_name = row[0:15]
-	digit_count = count_digits(row)
-	if digit_count <= 6 and '.' not in row or count_digits(row[-3:]) == 0:
+	if count_digits(row) <= 6 and '.' not in row or count_digits(row[-3:]) == 0:
 		grade = 'none posted'
 	else:
 		grade = row[-3:].strip()
@@ -76,6 +76,6 @@ for row in rows:
 driver.close()
 '''
 There are likely some bugs here I need to squash.
-The little algorithm above, especially, will likely need some work,
+The little algorithm above will likely need some work,
 as it is tailored specifically to my schedule.
 '''
