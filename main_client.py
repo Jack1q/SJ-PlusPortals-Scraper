@@ -15,6 +15,8 @@ as it really was a pain trying to do this without a driver.
 from selenium import webdriver
 from Course import Course
 import time
+import csv
+import os
 
 USERNAME = '' # Your school email
 PASSWORD = '' # Your password
@@ -66,7 +68,7 @@ course_list = [] # List of Course objects
 # extracts the course name and grade from each class. assigns 'none posted'
 # to classes with grades 
 for row in rows:
-	course_name = row[0:15]
+	course_name = row[0:15].strip()
 	if count_digits(row) <= 6 and '.' not in row or count_digits(row[-3:]) == 0:
 		grade = 'none posted'
 	else:
@@ -79,3 +81,36 @@ There are likely some bugs here I need to squash.
 The little algorithm above will likely need some work,
 as it is tailored specifically to my schedule.
 '''
+
+# This second half is just an extra bit I added to track
+# updated grades. 
+
+# writes course / grade data to file to temporarily save
+def write_grades_to_file(course_list):
+	with open('temp.csv', 'w', newline = '') as tempfile:
+		writer = csv.writer(tempfile)
+		for course in course_list:
+			writer.writerow([course.get_name(), course.get_grade()])
+
+# if file is empty
+if os.path.getsize('temp.csv') == 0:
+	# write courses / grades to file
+	write_grades_to_file(course_list)
+else:
+	# Compare current grade data with data in temp.csv
+	# If a difference is been found, it means a new grade is posted.
+	change_list = []
+	with open('temp.csv') as tempfile:
+		readCSV = csv.reader(tempfile, delimiter = ',')
+		i = 0
+		for row in readCSV:
+			if i < len(course_list) and row[1] != course_list[i].get_grade():
+				change_list.append(f"{course_list[i].get_name()} {row[1]} -> {course_list[i].get_grade()}")
+			i += 1
+
+# print any changes
+for change in change_list:
+	print(change)
+
+# update grades in temp file
+write_grades_to_file(course_list)
