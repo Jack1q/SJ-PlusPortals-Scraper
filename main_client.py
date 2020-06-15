@@ -108,9 +108,9 @@ else:
 				change_list.append(f"{course_list[i].get_name()} {row[1]} -> {course_list[i].get_grade()}")
 			i += 1
 
-# print any changes
-for change in change_list:
-	print(change)
+	# print any changes
+	for change in change_list:
+		print(change)
 
 # update grades in temp file
 write_grades_to_file(course_list)
